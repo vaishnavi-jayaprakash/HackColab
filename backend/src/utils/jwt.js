@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import "../config/env.js";
 
 export function generateToken(userId) {
   return jwt.sign(

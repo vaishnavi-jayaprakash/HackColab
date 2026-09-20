@@ -54,6 +54,7 @@ export const ModelName = {
   User: 'User',
   Hackathon: 'Hackathon',
   Team: 'Team',
+  TeamInvitation: 'TeamInvitation',
   TeamMember: 'TeamMember',
   Task: 'Task',
   Deadline: 'Deadline',
@@ -123,6 +124,19 @@ export const TeamScalarFieldEnum = {
 } as const
 
 export type TeamScalarFieldEnum = (typeof TeamScalarFieldEnum)[keyof typeof TeamScalarFieldEnum]
+
+
+export const TeamInvitationScalarFieldEnum = {
+  id: 'id',
+  teamId: 'teamId',
+  email: 'email',
+  invitedById: 'invitedById',
+  status: 'status',
+  createdAt: 'createdAt',
+  acceptedAt: 'acceptedAt'
+} as const
+
+export type TeamInvitationScalarFieldEnum = (typeof TeamInvitationScalarFieldEnum)[keyof typeof TeamInvitationScalarFieldEnum]
 
 
 export const TeamMemberScalarFieldEnum = {

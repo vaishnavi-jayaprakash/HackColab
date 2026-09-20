@@ -37,6 +37,13 @@ const createTask = async (req, res) => {
       });
     }
 
+    if (assigneeId && team.leadId !== req.userId) {
+      return res.status(403).json({
+        success: false,
+        message: "Only the team lead can assign tasks",
+      });
+    }
+
     // If assignee provided, verify user
     if (assigneeId) {
       const member = await prisma.teamMember.findUnique({
@@ -211,6 +218,19 @@ const updateTask = async (req, res) => {
         success: false,
         message: "Task not found",
       });
+    }
+
+    // Only the team lead can set or change a task's assignee.
+    if (assigneeId !== undefined && (assigneeId || null) !== existingTask.assigneeId) {
+      const team = await prisma.team.findUnique({
+        where: { id: existingTask.teamId },
+      });
+      if (team?.leadId !== req.userId) {
+        return res.status(403).json({
+          success: false,
+          message: "Only the team lead can assign or reassign tasks",
+        });
+      }
     }
 
     // Validate assignee if supplied

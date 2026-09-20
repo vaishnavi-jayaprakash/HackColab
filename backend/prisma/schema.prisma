@@ -57,9 +57,26 @@ model Team {
   repositories    Repository[]
   uploads         Upload[]
   submissionItems SubmissionItem[]
+  invitations     TeamInvitation[]
 
   @@index([hackathonId])
   @@index([leadId])
+}
+
+model TeamInvitation {
+  id          String   @id @default(uuid())
+  teamId      String
+  email       String
+  invitedById String
+  status      String   @default("PENDING")
+  createdAt   DateTime @default(now())
+  acceptedAt  DateTime?
+
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@unique([teamId, email])
+  @@index([email])
+  @@index([teamId])
 }
 
 model TeamMember {

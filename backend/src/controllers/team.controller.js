@@ -1,4 +1,13 @@
 import prisma from "../lib/prisma.js";
+
+async function getLeadTeam(teamId, userId) {
+  const team = await prisma.team.findUnique({ where: { id: teamId } });
+  if (!team) return { error: [404, "Team not found"] };
+  if (team.leadId !== userId) {
+    return { error: [403, "Only the team lead can manage members or delete this team"] };
+  }
+  return { team };
+}
 // =====================================
 // CREATE TEAM
 // =====================================
@@ -159,35 +168,25 @@ const getTeamById = async (req, res) => {
 const addTeamMember = async (req, res) => {
   try {
     const { teamId } = req.params;
-    const { userId, role } = req.body;
+    const { userId, email } = req.body;
 
-    if (!userId) {
+    if (!userId && !email) {
       return res.status(400).json({
         success: false,
-        message: "User ID is required",
+        message: "User email or ID is required",
       });
     }
 
-    // Check team
-    const team = await prisma.team.findUnique({
-      where: {
-        id: teamId,
-      },
-    });
-
-    if (!team) {
-      return res.status(404).json({
-        success: false,
-        message: "Team not found",
-      });
+    const leadCheck = await getLeadTeam(teamId, req.userId);
+    if (leadCheck.error) {
+      const [status, message] = leadCheck.error;
+      return res.status(status).json({ success: false, message });
     }
 
-    // Check user
-    const user = await prisma.user.findUnique({
-      where: {
-        id: userId,
-      },
-    });
+    const normalizedEmail = email?.trim().toLowerCase();
+    const user = userId
+      ? await prisma.user.findUnique({ where: { id: userId } })
+      : await prisma.user.findUnique({ where: { email: normalizedEmail } });
 
     if (!user) {
       return res.status(404).json({
@@ -201,7 +200,7 @@ const addTeamMember = async (req, res) => {
       where: {
         teamId_userId: {
           teamId,
-          userId,
+          userId: user.id,
         },
       },
     });
@@ -216,8 +215,8 @@ const addTeamMember = async (req, res) => {
     const member = await prisma.teamMember.create({
       data: {
         teamId,
-        userId,
-        role: role || "MEMBER",
+        userId: user.id,
+        role: "MEMBER",
       },
       include: {
         user: {
@@ -289,9 +288,121 @@ const getTeamMembers = async (req, res) => {
   }
 };
 
+const removeTeamMember = async (req, res) => {
+  try {
+    const { teamId, userId } = req.params;
+    const leadCheck = await getLeadTeam(teamId, req.userId);
+    if (leadCheck.error) {
+      const [status, message] = leadCheck.error;
+      return res.status(status).json({ success: false, message });
+    }
+    if (leadCheck.team.leadId === userId) {
+      return res.status(400).json({
+        success: false,
+        message: "Delete the team instead of removing its lead",
+      });
+    }
+
+    const member = await prisma.teamMember.findUnique({
+      where: { teamId_userId: { teamId, userId } },
+    });
+    if (!member) return res.status(404).json({ success: false, message: "Team member not found" });
+
+    await prisma.teamMember.delete({ where: { id: member.id } });
+    return res.status(200).json({ success: true, message: "Member removed successfully" });
+  } catch (error) {
+    console.error("Remove team member error:", error);
+    return res.status(500).json({ success: false, message: "Failed to remove team member" });
+  }
+};
+
+// =====================================
+// INVITE A NEW MEMBER
+// =====================================
+
+const inviteTeamMember = async (req, res) => {
+  try {
+    const { teamId } = req.params;
+    const email = req.body.email?.trim().toLowerCase();
+    if (!email) return res.status(400).json({ success: false, message: "An email address is required" });
+
+    const leadCheck = await getLeadTeam(teamId, req.userId);
+    if (leadCheck.error) {
+      const [status, message] = leadCheck.error;
+      return res.status(status).json({ success: false, message });
+    }
+
+    const existingUser = await prisma.user.findUnique({ where: { email } });
+    if (existingUser) {
+      return res.status(409).json({
+        success: false,
+        message: "This person already has an account. Add them as a registered member instead.",
+      });
+    }
+
+    const invitation = await prisma.teamInvitation.upsert({
+      where: { teamId_email: { teamId, email } },
+      update: { invitedById: req.userId, status: "PENDING", acceptedAt: null },
+      create: { teamId, email, invitedById: req.userId },
+    });
+
+    return res.status(201).json({
+      success: true,
+      message: "Invitation created. The member will join this team after signing up with this email.",
+      data: { invitation },
+    });
+  } catch (error) {
+    console.error("Invite team member error:", error);
+    return res.status(500).json({ success: false, message: "Failed to create invitation" });
+  }
+};
+
+const getTeamInvitations = async (req, res) => {
+  try {
+    const { teamId } = req.params;
+    const leadCheck = await getLeadTeam(teamId, req.userId);
+    if (leadCheck.error) {
+      const [status, message] = leadCheck.error;
+      return res.status(status).json({ success: false, message });
+    }
+    const invitations = await prisma.teamInvitation.findMany({
+      where: { teamId, status: "PENDING" },
+      orderBy: { createdAt: "desc" },
+    });
+    return res.status(200).json({ success: true, data: { invitations } });
+  } catch (error) {
+    console.error("Get team invitations error:", error);
+    return res.status(500).json({ success: false, message: "Failed to fetch invitations" });
+  }
+};
+
+const deleteTeam = async (req, res) => {
+  try {
+    const { teamId } = req.params;
+    const leadCheck = await getLeadTeam(teamId, req.userId);
+    if (leadCheck.error) {
+      const [status, message] = leadCheck.error;
+      return res.status(status).json({ success: false, message });
+    }
+
+    await prisma.team.delete({ where: { id: teamId } });
+    return res.status(200).json({
+      success: true,
+      message: "Team and its associated database data deleted successfully",
+    });
+  } catch (error) {
+    console.error("Delete team error:", error);
+    return res.status(500).json({ success: false, message: "Failed to delete team" });
+  }
+};
+
 export {
   createTeam,
   getTeamById,
   addTeamMember,
+  inviteTeamMember,
+  getTeamInvitations,
+  removeTeamMember,
+  deleteTeam,
   getTeamMembers,
 };

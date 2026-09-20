@@ -9,6 +9,7 @@ import {
 } from "../controllers/task.controller.js";
 
 import authenticate from "../middleware/auth.middleware.js";
+import { requireTaskAccess, requireTeamAccess } from "../middleware/team-access.middleware.js";
 
 const router = express.Router();
 
@@ -16,12 +17,14 @@ const router = express.Router();
 router.post(
   "/teams/:teamId/tasks",
   authenticate,
+  requireTeamAccess,
   createTask
 );
 
 router.get(
   "/teams/:teamId/tasks",
   authenticate,
+  requireTeamAccess,
   getTeamTasks
 );
 
@@ -29,18 +32,21 @@ router.get(
 router.get(
   "/tasks/:taskId",
   authenticate,
+  requireTaskAccess,
   getTaskById
 );
 
 router.patch(
   "/tasks/:taskId",
   authenticate,
+  requireTaskAccess,
   updateTask
 );
 
 router.delete(
   "/tasks/:taskId",
   authenticate,
+  requireTaskAccess,
   deleteTask
 );
 

@@ -11,6 +11,7 @@
 export type * from './models/User.ts'
 export type * from './models/Hackathon.ts'
 export type * from './models/Team.ts'
+export type * from './models/TeamInvitation.ts'
 export type * from './models/TeamMember.ts'
 export type * from './models/Task.ts'
 export type * from './models/Deadline.ts'

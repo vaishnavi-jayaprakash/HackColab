@@ -30,9 +30,10 @@ const signup = async (req, res) => {
     }
 
     // Check existing user
+    const normalizedEmail = email.trim().toLowerCase();
     const existingUser = await prisma.user.findUnique({
       where: {
-        email,
+        email: normalizedEmail,
       },
     });
 
@@ -47,12 +48,28 @@ const signup = async (req, res) => {
     const passwordHash = await hashPassword(password);
 
     // Create user
-    const user = await prisma.user.create({
-      data: {
-        name,
-        email,
-        passwordHash,
-      },
+    const user = await prisma.$transaction(async (tx) => {
+      const createdUser = await tx.user.create({
+        data: { name, email: normalizedEmail, passwordHash },
+      });
+      const invitations = await tx.teamInvitation.findMany({
+        where: { email: normalizedEmail, status: "PENDING" },
+      });
+      if (invitations.length) {
+        await tx.teamMember.createMany({
+          data: invitations.map((invitation) => ({
+            teamId: invitation.teamId,
+            userId: createdUser.id,
+            role: "MEMBER",
+          })),
+          skipDuplicates: true,
+        });
+        await tx.teamInvitation.updateMany({
+          where: { id: { in: invitations.map((invitation) => invitation.id) } },
+          data: { status: "ACCEPTED", acceptedAt: new Date() },
+        });
+      }
+      return createdUser;
     });
 
     // Generate JWT

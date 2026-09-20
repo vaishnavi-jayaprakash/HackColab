@@ -60,6 +60,16 @@ const createHackathon = async (req, res) => {
 const getHackathons = async (req, res) => {
   try {
     const hackathons = await prisma.hackathon.findMany({
+      where: {
+        teams: {
+          some: {
+            OR: [
+              { leadId: req.userId },
+              { members: { some: { userId: req.userId } } },
+            ],
+          },
+        },
+      },
       orderBy: {
         startDate: "asc",
       },
@@ -89,12 +99,20 @@ const getHackathonById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const hackathon = await prisma.hackathon.findUnique({
+    const accessibleTeam = {
+      OR: [
+        { leadId: req.userId },
+        { members: { some: { userId: req.userId } } },
+      ],
+    };
+    const hackathon = await prisma.hackathon.findFirst({
       where: {
         id,
+        teams: { some: accessibleTeam },
       },
       include: {
         teams: {
+          where: accessibleTeam,
           include: {
             members: {
               include: {

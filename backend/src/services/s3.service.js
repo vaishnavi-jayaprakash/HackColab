@@ -1,4 +1,4 @@
-import "dotenv/config";
+import "../config/env.js";
 
 import {
   S3Client,

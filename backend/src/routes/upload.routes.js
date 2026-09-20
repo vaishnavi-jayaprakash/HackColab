@@ -8,6 +8,7 @@ import {
 } from "../controllers/upload.controller.js";
 
 import authenticate from "../middleware/auth.middleware.js";
+import { requireTeamAccess, requireUploadAccess } from "../middleware/team-access.middleware.js";
 
 const router = express.Router();
 
@@ -21,6 +22,7 @@ const upload = multer({
 router.post(
   "/teams/:teamId/uploads",
   authenticate,
+  requireTeamAccess,
   upload.single("file"),
   uploadFile
 );
@@ -28,12 +30,14 @@ router.post(
 router.get(
   "/teams/:teamId/uploads",
   authenticate,
+  requireTeamAccess,
   getTeamFiles
 );
 
 router.delete(
   "/uploads/:uploadId",
   authenticate,
+  requireUploadAccess,
   deleteFile
 );
 

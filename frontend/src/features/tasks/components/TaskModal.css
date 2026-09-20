@@ -1,0 +1,36 @@
+.task-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.task-modal-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.task-modal-textarea {
+  resize: vertical;
+  min-height: 72px;
+  font-family: inherit;
+}
+
+.task-modal-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.task-modal-error {
+  color: var(--danger, #f87171);
+  font-size: 13px;
+  margin: 0;
+}
+
+@media (max-width: 560px) {
+  .task-modal-row {
+    grid-template-columns: 1fr;
+  }
+}

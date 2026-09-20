@@ -33,6 +33,11 @@ export type Hackathon = Prisma.HackathonModel
  */
 export type Team = Prisma.TeamModel
 /**
+ * Model TeamInvitation
+ * 
+ */
+export type TeamInvitation = Prisma.TeamInvitationModel
+/**
  * Model TeamMember
  * 
  */
