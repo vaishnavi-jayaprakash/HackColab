@@ -1,0 +1,55 @@
+.commit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.commit-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 5px;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.commit-row:last-child {
+  border-bottom: none;
+}
+
+.commit-avatar {
+  width: 31px;
+  height: 31px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.commit-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.commit-author {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.commit-message {
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.commit-time {
+  font-size: 13px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}

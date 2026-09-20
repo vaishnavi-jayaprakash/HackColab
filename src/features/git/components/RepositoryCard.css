@@ -1,0 +1,17 @@
+.repo-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.repo-card-name {
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.repo-card-sync {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin-top: 2px;
+}

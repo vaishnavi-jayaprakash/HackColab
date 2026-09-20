@@ -1,0 +1,21 @@
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 9px;
+  padding: 47px 24px;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+}
+
+.empty-state h4 {
+  color: var(--text-primary);
+  font-size: 17px;
+}
+
+.empty-state p {
+  font-size: 15px;
+  max-width: 330px;
+}

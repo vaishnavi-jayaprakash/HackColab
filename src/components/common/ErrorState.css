@@ -1,0 +1,32 @@
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 9px;
+  padding: 57px 24px;
+  color: var(--text-secondary);
+}
+
+.error-state-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--danger-soft);
+  color: var(--danger);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.error-state h4 {
+  color: var(--text-primary);
+  font-size: 17px;
+}
+
+.error-state p {
+  font-size: 15px;
+  max-width: 378px;
+}

@@ -1,0 +1,36 @@
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+}
+
+.card-padded {
+  padding: 21px 24px;
+}
+
+.card-hoverable {
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.card-hoverable:hover {
+  border-color: var(--border);
+}
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 17px;
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.card-subtitle {
+  color: var(--text-secondary);
+  font-size: 15px;
+  margin-top: 2px;
+}

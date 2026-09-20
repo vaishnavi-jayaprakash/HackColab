@@ -1,0 +1,24 @@
+.conflict-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 5px;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.conflict-row:last-child {
+  border-bottom: none;
+}
+
+.conflict-branches {
+  font-size: 15px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+}
+
+.conflict-file {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}

@@ -1,0 +1,29 @@
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.stat-card-label {
+  font-size: 15px;
+  color: var(--text-secondary);
+}
+
+.stat-card-value {
+  font-size: 31px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.stat-card-note {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.stat-card-danger .stat-card-value {
+  color: var(--danger);
+}
+
+.stat-card-accent .stat-card-value {
+  color: var(--accent-text);
+}

@@ -1,0 +1,34 @@
+.git-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 17px;
+  margin: 19px 0;
+}
+
+.git-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.git-stat-value {
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.git-stat-danger .git-stat-value {
+  color: var(--danger);
+}
+
+.git-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 19px;
+}
+
+@media (max-width: 1062px) {
+  .git-stats,
+  .git-columns {
+    grid-template-columns: 1fr;
+  }
+}

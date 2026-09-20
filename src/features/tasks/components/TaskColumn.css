@@ -1,0 +1,42 @@
+.task-column {
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 236px;
+}
+
+.task-column-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  padding: 0 2px;
+}
+
+.task-column-count {
+  background: var(--surface-2);
+  border-radius: 1179px;
+  padding: 1px 9px;
+  font-size: 13px;
+}
+
+.task-column-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.task-column-empty {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 14px;
+  padding: 24px 0;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-md);
+}

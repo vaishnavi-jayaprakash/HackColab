@@ -1,0 +1,59 @@
+.submission-progress-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.submission-progress-track {
+  flex: 1;
+  max-width: 307px;
+}
+
+.submission-columns {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 19px;
+  align-items: start;
+}
+
+.submission-file-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 19px;
+}
+
+.submission-file-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 5px;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.submission-file-row:last-child {
+  border-bottom: none;
+}
+
+.submission-file-icon {
+  font-size: 18px;
+}
+
+.submission-file-name {
+  font-size: 15px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.submission-submit-btn {
+  margin-top: 5px;
+}
+
+@media (max-width: 1062px) {
+  .submission-columns {
+    grid-template-columns: 1fr;
+  }
+}
